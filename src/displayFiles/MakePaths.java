@@ -12,7 +12,5 @@ public class MakePaths {
 
     public void fillPoints(ArrayList<Point> userPoints){
 
-
-
     }
 }
