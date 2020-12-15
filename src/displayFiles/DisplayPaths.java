@@ -121,7 +121,7 @@ public class DisplayPaths {
             if (j > 0) drawPanel.repaint();
             ++j;
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (Exception ex) {
             }
         }
