@@ -35,13 +35,14 @@ public class DisplayPaths {
 
         pathPoints = makePaths.getPath();
 
-        for(Point pts : pathPoints.getPath()){
-           // xCoord = (int) (pts.getX());
-           // yCoord = (int) (pts.getY());
+        for (Point pts : pathPoints.getPath()) {
+            // xCoord = (int) (pts.getX());
+            // yCoord = (int) (pts.getY());
             //drawPanel.repaint();
-            try{
+            try {
                 Thread.sleep(100);
-            } catch(Exception ex){}
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -49,39 +50,76 @@ public class DisplayPaths {
 
         public void paintComponent(Graphics g) {
             g.setColor(Color.black);
-            g.drawLine(98,800,1600,800);
+            g.drawLine(XOFFSET, YOFFSET, 1200, YOFFSET);
             g.setColor(Color.red);
-            if(filled)  g.setColor(Color.blue);
-            g.fillOval(xCoord*25 + XOFFSET,  YOFFSET-yCoord*15, 15, 15);
+            if (filled) g.setColor(Color.blue);
+            g.fillOval(xCoord * 20 + XOFFSET, YOFFSET - yCoord * 10, 15, 15);
         }
     }
 
-    public void displayUserPoints(){
+    public void displayUserPoints() {
 
-        userPoints.addPathPoint(new Point(0,0));
-        userPoints.addPathPoint(new Point(50,40));
-        userPoints.addPathPoint(new Point(20,0));
-        userPoints.addPathPoint(new Point(30,40));
+        userPoints.addPathPoint(new Point(0, 0));
+        userPoints.addPathPoint(new Point(20, 0));
+        userPoints.addPathPoint(new Point(30, 40));
+        userPoints.addPathPoint(new Point(50, 40));
 
-        for(Point pts : userPoints.getPath()) {
-            xCoord = (int) (pts.getX());
-            yCoord = (int) (pts.getY());
-            drawPanel.repaint();
-            try {
-                Thread.sleep(1000);
-            } catch (Exception ex) {
-            }
+        xCoord = (int) (userPoints.getPath().get(0).getX());
+        yCoord = (int) (userPoints.getPath().get(0).getY());
+        drawPanel.repaint();
+        try {
+            Thread.sleep(50);
+        } catch (Exception ex) {
+        }
+        xCoord = (int) (userPoints.getPath().get(3).getX());
+        yCoord = (int) (userPoints.getPath().get(3).getY());
+        drawPanel.repaint();
+        try {
+            Thread.sleep(1000);
+        } catch (Exception ex) {
+        }
+        xCoord = (int) (userPoints.getPath().get(1).getX());
+        yCoord = (int) (userPoints.getPath().get(1).getY());
+        drawPanel.repaint();
+        try {
+            Thread.sleep(50);
+        } catch (Exception ex) {
+        }
+        xCoord = (int) (userPoints.getPath().get(2).getX());
+        yCoord = (int) (userPoints.getPath().get(2).getY());
+        drawPanel.repaint();
+        try {
+            Thread.sleep(1000);
+        } catch (Exception ex) {
         }
     }
 
     public void displayFilledPoints() {
 
-        int distance = (int) (userPoints.getPath().get(2).getX() - userPoints.getPath().get(0).getX());
-        int numPoints = distance / POINTSPACING;
-        for (int i = 0; i < numPoints; ++i) {
-            filledPoints.addPathPoint(new Point(userPoints.getPath().get(0).getX() + i*POINTSPACING,
-                    userPoints.getPath().get(0).getY()));
+        int numPoints;
+        double distance;
+        for (int j = 0; j < userPoints.getPath().size() - 1; ++j) {
+            Vector displacement = new Vector(userPoints.getPath().get(j + 1).getX(),
+                    userPoints.getPath().get(j + 1).getY(),
+                    userPoints.getPath().get(j).getX(),
+                    userPoints.getPath().get(j).getY());
+            numPoints = (int) (displacement.magnitude() / POINTSPACING);
+            Point increment = new Point(displacement.normalize().getX() * POINTSPACING,
+                    displacement.normalize().getY() * POINTSPACING);
+            for (int i = 0; i < numPoints; ++i) {
+                filledPoints.addPathPoint(new Point(userPoints.getPath().get(j).getX() + i * increment.getX(),
+                        userPoints.getPath().get(j).getY() + i * increment.getY()));
+                xCoord = (int) filledPoints.getPath().get(i).getX();
+                yCoord = (int) filledPoints.getPath().get(i).getY();
+                if (i > 0) drawPanel.repaint();
+                try {
+                    Thread.sleep(200);
+                } catch (Exception ex) {
+                }
+
+            }
         }
+
         filled = true;
         int j = 0;
         for (Point pts : filledPoints.getPath()) {
