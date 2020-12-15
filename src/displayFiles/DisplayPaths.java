@@ -110,14 +110,6 @@ public class DisplayPaths {
             for (int i = 0; i < numPoints; ++i) {
                 filledPoints.addPathPoint(new Point(userPoints.getPath().get(j).getX() + i * increment.getX(),
                         userPoints.getPath().get(j).getY() + i * increment.getY()));
-                xCoord = filledPoints.getPath().get(i).getX();
-                yCoord = filledPoints.getPath().get(i).getY();
-                if (i > 0) drawPanel.repaint();
-                try {
-                    Thread.sleep(200);
-                } catch (Exception ex) {
-                }
-
             }
         }
 
