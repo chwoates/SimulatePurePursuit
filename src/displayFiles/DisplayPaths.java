@@ -115,8 +115,11 @@ public class DisplayPaths {
     }
 
     public void smooth(){
-        for(int i=1; i<(totalPoints-1); ++i){
+        for(int i=0; i<(totalPoints); ++i){
             smoothedPoints.addPathPoint(new Point(userPoints.getPathPoint(i).getX(), userPoints.getPathPoint(i).getY()));
+        }
+        for(int i=1; i<(totalPoints-1); ++i){
+            //smoothedPoints.addPathPoint(new Point(userPoints.getPathPoint(i).getX(), userPoints.getPathPoint(i).getY()));
         }
 
     }
