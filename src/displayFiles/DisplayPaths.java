@@ -53,7 +53,7 @@ public class DisplayPaths {
             g.drawLine(XOFFSET, YOFFSET, 1200, YOFFSET);
             g.setColor(Color.red);
             if (filled) g.setColor(Color.blue);
-            g.fillOval((int)(xCoord * 20) + XOFFSET, (int)(YOFFSET - yCoord * 10), 15, 15);
+            g.fillOval((int)(xCoord * 15) + XOFFSET, (int)(YOFFSET - yCoord * 15), 15, 15);
         }
     }
 
@@ -105,23 +105,23 @@ public class DisplayPaths {
                     userPoints.getPath().get(j + 1).getX(),
                     userPoints.getPath().get(j + 1).getY());
             numPoints = (int) (displacement.magnitude() / POINTSPACING);
+            System.out.println(numPoints);
             Point increment = new Point(displacement.normalize().getX() * POINTSPACING,
                     displacement.normalize().getY() * POINTSPACING);
-            for (int i = 0; i < numPoints; ++i) {
+            for (int i = 0; i < numPoints+1; ++i) {
                 filledPoints.addPathPoint(new Point(userPoints.getPath().get(j).getX() + i * increment.getX(),
                         userPoints.getPath().get(j).getY() + i * increment.getY()));
             }
         }
 
         filled = true;
-        int j = 0;
+
         for (Point pts : filledPoints.getPath()) {
             xCoord = (pts.getX());
             yCoord = (pts.getY());
-            if (j > 0) drawPanel.repaint();
-            ++j;
+            drawPanel.repaint();
             try {
-                Thread.sleep(300);
+                Thread.sleep(100);
             } catch (Exception ex) {
             }
         }
