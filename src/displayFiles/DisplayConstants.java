@@ -8,4 +8,5 @@ public final class DisplayConstants {
     public final static int YOFFSET = 700;
     public final static int POINTSPACING = 2;
     public final static double SMOOTHING = 1.0;
+    public final static int LOOKPTSAHEAD = 5;
 }
