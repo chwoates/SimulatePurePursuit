@@ -14,8 +14,10 @@ public class DisplayPaths {
     private Path pathPoints = new Path();
     private Path userPoints = new Path();
     private Path filledPoints = new Path();
+    private Path smoothedPoints = new Path();
     private MakePaths makePaths = new MakePaths();
     private boolean filled = false;
+    private int totalPoints = 0;
     JFrame frame = new JFrame();
     JButton button = new JButton("Eat me");
     MyDrawPanel drawPanel = new MyDrawPanel();
@@ -64,11 +66,11 @@ public class DisplayPaths {
         userPoints.addPathPoint(new Point(40, 40));
         userPoints.addPathPoint(new Point(70, 40));
 
-        displayPoint(userPoints.getPath().get(0).getX(),userPoints.getPath().get(0).getY());
-        displayPoint(userPoints.getPath().get(3).getX(),userPoints.getPath().get(3).getY());
+        displayPoint(userPoints.getPath().get(0).getX(),userPoints.getPathPoint(0).getY());
+        displayPoint(userPoints.getPath().get(3).getX(),userPoints.getPathPoint(3).getY());
         delay(1000);
-        displayPoint(userPoints.getPath().get(1).getX(),userPoints.getPath().get(1).getY());
-        displayPoint(userPoints.getPath().get(2).getX(),userPoints.getPath().get(2).getY());
+        displayPoint(userPoints.getPath().get(1).getX(),userPoints.getPathPoint(1).getY());
+        displayPoint(userPoints.getPath().get(2).getX(),userPoints.getPathPoint(2).getY());
         delay(1000);
     }
 
@@ -77,20 +79,21 @@ public class DisplayPaths {
         int numPoints;
         filled = true;
         for (int j = 0; j < userPoints.getPath().size() - 1; ++j) {
-                    Vector displacement = new Vector(userPoints.getPath().get(j).getX(),
-                    userPoints.getPath().get(j).getY(),
-                    userPoints.getPath().get(j + 1).getX(),
-                    userPoints.getPath().get(j + 1).getY());
+                    Vector displacement = new Vector(userPoints.getPathPoint(j).getX(),
+                    userPoints.getPathPoint(j).getY(),
+                    userPoints.getPathPoint(j + 1).getX(),
+                    userPoints.getPathPoint(j + 1).getY());
                 numPoints = (int) (displacement.magnitude() / POINTSPACING);
+                totalPoints = totalPoints + numPoints;
                 System.out.println(numPoints);
                 Point increment = new Point(displacement.normalize().getX() * POINTSPACING,
                     displacement.normalize().getY() * POINTSPACING);
                 for (int i = 0; i < numPoints + 1; ++i) {
-                    filledPoints.addPathPoint(new Point(userPoints.getPath().get(j).getX() + i * increment.getX(),
-                        userPoints.getPath().get(j).getY() + i * increment.getY()));
+                    filledPoints.addPathPoint(new Point(userPoints.getPathPoint(j).getX() + i * increment.getX(),
+                        userPoints.getPathPoint(j).getY() + i * increment.getY()));
             }
         }
-
+        System.out.println(totalPoints);
         filled = true;
         for (Point pts : filledPoints.getPath()) {
             xCoord = (pts.getX());
@@ -107,6 +110,13 @@ public class DisplayPaths {
         try {
             Thread.sleep(100);
         } catch (Exception ex) {
+        }
+
+    }
+
+    public void smooth(){
+        for(int i=1; i<(totalPoints-1); ++i){
+            smoothedPoints.addPathPoint(new Point(userPoints.getPathPoint(i).getX(), userPoints.getPathPoint(i).getY()));
         }
 
     }

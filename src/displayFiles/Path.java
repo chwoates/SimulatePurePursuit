@@ -15,4 +15,8 @@ public class Path {
     public ArrayList<Point> getPath(){
         return pathPoints;
     }
+
+    public Point getPathPoint(int index){
+        return pathPoints.get(index);
+    }
 }
