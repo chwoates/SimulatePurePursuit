@@ -100,10 +100,10 @@ public class DisplayPaths {
         double distance;
         filled = true;
         for (int j = 0; j < userPoints.getPath().size() - 1; ++j) {
-            Vector displacement = new Vector(userPoints.getPath().get(j + 1).getX(),
-                    userPoints.getPath().get(j + 1).getY(),
-                    userPoints.getPath().get(j).getX(),
-                    userPoints.getPath().get(j).getY());
+            Vector displacement = new Vector(userPoints.getPath().get(j).getX(),
+                    userPoints.getPath().get(j).getY(),
+                    userPoints.getPath().get(j + 1).getX(),
+                    userPoints.getPath().get(j + 1).getY());
             numPoints = (int) (displacement.magnitude() / POINTSPACING);
             Point increment = new Point(displacement.normalize().getX() * POINTSPACING,
                     displacement.normalize().getY() * POINTSPACING);
