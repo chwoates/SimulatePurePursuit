@@ -98,6 +98,7 @@ public class DisplayPaths {
 
         int numPoints;
         double distance;
+        filled = true;
         for (int j = 0; j < userPoints.getPath().size() - 1; ++j) {
             Vector displacement = new Vector(userPoints.getPath().get(j + 1).getX(),
                     userPoints.getPath().get(j + 1).getY(),
