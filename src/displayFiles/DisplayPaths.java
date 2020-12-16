@@ -107,11 +107,7 @@ public class DisplayPaths {
         xCoord = xLoc;
         yCoord = yLoc;
         drawPanel.repaint();
-        try {
-            Thread.sleep(100);
-        } catch (Exception ex) {
-        }
-
+        delay(100);
     }
 
     public void smooth(){
