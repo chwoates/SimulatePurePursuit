@@ -126,6 +126,7 @@ public class DisplayPaths {
         int m;
         int n;
         int p;
+        int r;
 
     }
 
