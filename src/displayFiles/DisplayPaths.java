@@ -123,10 +123,7 @@ public class DisplayPaths {
     public void createPath(){
         int k;
         int l;
-        int m;
-        int n;
-        int p;
-        int r;
+      
 
     }
 
