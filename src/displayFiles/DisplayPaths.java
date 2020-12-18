@@ -111,11 +111,7 @@ public class DisplayPaths {
         xCoord = xLoc;
         yCoord = yLoc;
         drawPanel.repaint();
-        try {
-            Thread.sleep(100);
-        } catch (Exception ex) {
-        }
-
+        delay(100);
     }
 
     public void displayPath(Path path){
@@ -153,6 +149,7 @@ public class DisplayPaths {
                 displayPath(pathPoints);
             }
         }
+
     }
 
     public void createPath(){
