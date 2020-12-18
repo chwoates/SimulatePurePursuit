@@ -70,7 +70,7 @@ public class DisplayPaths {
 
         userPoints.addPathPoint(new Point(0, 0));
         userPoints.addPathPoint(new Point(30, 0));
-        userPoints.addPathPoint(new Point(40, 40));
+        userPoints.addPathPoint(new Point(40, 43));
         userPoints.addPathPoint(new Point(70, 40));
 
         displayPoint(userPoints.getPath().get(0).getX(),userPoints.getPathPoint(0).getY());
@@ -129,18 +129,25 @@ public class DisplayPaths {
         Vector diffVec;
         Vector diffPts;
         Vector smoothedVec;
-        double smoothFactor = 1.0;
+        double sumChanges = 0.0;
+        double avgChange = 10.0;
+        int k = 0;
 
-        for(int k=1; k<800; ++k) {
+        while (avgChange > 0.01) {
+            ++k;
+            sumChanges = 0.0;
             smoothedPoints = new Path();
             smoothedPoints.addPathPoint(new Point(pathPoints.getPathPoint(0).getX(), pathPoints.getPathPoint(0).getY()));
             for (int i = 1; i < (totalPoints - 1); ++i) {
                 diffVec = new Vector(pathPoints.getPathPoint(i - 1), pathPoints.getPathPoint(i + 1));
                 middlePoint = new Vector(pathPoints.getPathPoint(i - 1)).add(diffVec.scale(0.5));
                 diffPts = new Vector(pathPoints.getPathPoint(i), middlePoint);
-                smoothedVec = new Vector(pathPoints.getPathPoint(i)).add(diffPts.scale(smoothFactor));
+                smoothedVec = new Vector(pathPoints.getPathPoint(i)).add(diffPts.scale(SMOOTHING));
                 smoothedPoints.addPathPoint(new Point(smoothedVec.getX(), smoothedVec.getY()));
+                sumChanges = sumChanges + diffPts.scale(SMOOTHING).magnitude();
             }
+            avgChange = sumChanges/(totalPoints-2);
+            System.out.println(avgChange);
             smoothedPoints.addPathPoint(pathPoints.getPathPoint(totalPoints - 1));
             pathPoints = smoothedPoints;
             if((k % 40)== 0 ) {
@@ -149,7 +156,7 @@ public class DisplayPaths {
                 displayPath(pathPoints);
             }
         }
-
+        System.out.println("number of iterations: " + k);
     }
 
     public void createPath(){
