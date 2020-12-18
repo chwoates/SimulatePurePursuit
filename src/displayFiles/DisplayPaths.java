@@ -18,6 +18,7 @@ public class DisplayPaths {
     private MakePaths makePaths = new MakePaths();
     private boolean filled = false;
     private boolean erase = false;
+    private boolean pathState = true;
     private int totalPoints = 0;
     JFrame frame = new JFrame();
     JButton button = new JButton("Eat me");
@@ -28,27 +29,20 @@ public class DisplayPaths {
 
     public void runDisplay() {
 
-        frame.getContentPane().add(drawPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
-        frame.setVisible(true);
+        setFrame();
 
         displayUserPoints();
-        displayFilledPoints();
-        delay(5000);
-        smooth();
-        delay(15000);
-        erase = true;
-        drawPanel.repaint();
-        delay(2000);
-        erase = false;
 
-        for (Point pts : pathPoints.getPath()) {
-            xCoord = (pts.getX());
-            yCoord = (pts.getY());
-            drawPanel.repaint();
-            delay(50);
-        }
+        displayFilledPoints();  delay(5000);
+
+        smooth();  delay(5000);
+
+        eraseCanvas();
+
+        displayPath(pathPoints);
+
+        addRobot();
+
     }
 
     public class MyDrawPanel extends JPanel {
@@ -58,7 +52,7 @@ public class DisplayPaths {
                 g.setColor(Color.white);
                 g.fillRect(0,0,2000,1000);
             }
-            else {
+            if(pathState) {
                 g.setColor(Color.red);
                 if (filled) g.setColor(Color.blue);
                 g.fillOval((int) (xCoord * 15) + XOFFSET, (int) (YOFFSET - yCoord * 15), 15, 15);
@@ -69,9 +63,9 @@ public class DisplayPaths {
     public void displayUserPoints() {
 
         userPoints.addPathPoint(new Point(0, 0));
-        userPoints.addPathPoint(new Point(30, 0));
-        userPoints.addPathPoint(new Point(40, 43));
-        userPoints.addPathPoint(new Point(70, 40));
+        userPoints.addPathPoint(new Point(40, 0));
+        userPoints.addPathPoint(new Point(50, 42));
+        userPoints.addPathPoint(new Point(90, 40));
 
         displayPoint(userPoints.getPath().get(0).getX(),userPoints.getPathPoint(0).getY());
         displayPoint(userPoints.getPath().get(3).getX(),userPoints.getPathPoint(3).getY());
@@ -115,13 +109,14 @@ public class DisplayPaths {
     }
 
     public void displayPath(Path path){
+        pathState = true;
         for (Point pts : path.getPath()) {
             xCoord = (pts.getX());
             yCoord = (pts.getY());
             drawPanel.repaint();
             delay(50);
         }
-
+        pathState = false;
     }
 
     public void smooth(){
@@ -159,6 +154,11 @@ public class DisplayPaths {
         System.out.println("number of iterations: " + k);
     }
 
+    public void addRobot(){
+
+
+    }
+
     public void createPath(){
         int k;
 
@@ -169,5 +169,20 @@ public class DisplayPaths {
             Thread.sleep(delayTime);
         } catch (Exception ex) {
         }
+    }
+
+    public void eraseCanvas(){
+        erase = true;
+        drawPanel.repaint();
+        delay(2000);
+        erase = false;
+        filled = true;
+    }
+
+    public void setFrame(){
+        frame.getContentPane().add(drawPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
+        frame.setVisible(true);
     }
 }
