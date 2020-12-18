@@ -17,6 +17,7 @@ public class DisplayPaths {
     private Path smoothedPoints = new Path();
     private MakePaths makePaths = new MakePaths();
     private boolean filled = false;
+    private boolean erase = false;
     private int totalPoints = 0;
     JFrame frame = new JFrame();
     JButton button = new JButton("Eat me");
@@ -34,29 +35,35 @@ public class DisplayPaths {
 
         displayUserPoints();
         displayFilledPoints();
-
-        pathPoints = makePaths.getPath();
+        delay(5000);
+        smooth();
+        delay(15000);
+        erase = true;
+        drawPanel.repaint();
+        delay(2000);
+        erase = false;
 
         for (Point pts : pathPoints.getPath()) {
-            // xCoord = (int) (pts.getX());
-            // yCoord = (int) (pts.getY());
-            //drawPanel.repaint();
-            try {
-                Thread.sleep(100);
-            } catch (Exception ex) {
-            }
+            xCoord = (pts.getX());
+            yCoord = (pts.getY());
+            drawPanel.repaint();
+            delay(50);
         }
     }
 
     public class MyDrawPanel extends JPanel {
 
         public void paintComponent(Graphics g) {
-            g.setColor(Color.black);
-            g.drawLine(XOFFSET, YOFFSET, 1200, YOFFSET);
-            g.setColor(Color.red);
-            if (filled) g.setColor(Color.blue);
-            g.fillOval((int) (xCoord * 15) + XOFFSET, (int) (YOFFSET - yCoord * 15), 15, 15);
-        }
+            if(erase){
+                g.setColor(Color.white);
+                g.fillRect(0,0,2000,1000);
+            }
+            else {
+                g.setColor(Color.red);
+                if (filled) g.setColor(Color.blue);
+                g.fillOval((int) (xCoord * 15) + XOFFSET, (int) (YOFFSET - yCoord * 15), 15, 15);
+            }
+            }
     }
 
     public void displayUserPoints() {
@@ -93,14 +100,11 @@ public class DisplayPaths {
                         userPoints.getPathPoint(j).getY() + i * increment.getY()));
             }
         }
+        totalPoints = totalPoints + 3;
         System.out.println(totalPoints);
         filled = true;
-        for (Point pts : filledPoints.getPath()) {
-            xCoord = (pts.getX());
-            yCoord = (pts.getY());
-            drawPanel.repaint();
-            delay(100);
-        }
+        displayPath(filledPoints);
+        pathPoints = filledPoints;
     }
 
     public void displayPoint(double xLoc, double yLoc){
@@ -114,21 +118,45 @@ public class DisplayPaths {
 
     }
 
-    public void smooth(){
-        for(int i=0; i<(totalPoints); ++i){
-            smoothedPoints.addPathPoint(new Point(userPoints.getPathPoint(i).getX(), userPoints.getPathPoint(i).getY()));
-        }
-        for(int i=1; i<(totalPoints-1); ++i){
-            //smoothedPoints.addPathPoint(new Point(userPoints.getPathPoint(i).getX(), userPoints.getPathPoint(i).getY()));
+    public void displayPath(Path path){
+        for (Point pts : path.getPath()) {
+            xCoord = (pts.getX());
+            yCoord = (pts.getY());
+            drawPanel.repaint();
+            delay(50);
         }
 
     }
 
+    public void smooth(){
+        Vector middlePoint;
+        Vector diffVec;
+        Vector diffPts;
+        Vector smoothedVec;
+        double smoothFactor = 1.0;
+
+        for(int k=1; k<800; ++k) {
+            smoothedPoints = new Path();
+            smoothedPoints.addPathPoint(new Point(pathPoints.getPathPoint(0).getX(), pathPoints.getPathPoint(0).getY()));
+            for (int i = 1; i < (totalPoints - 1); ++i) {
+                diffVec = new Vector(pathPoints.getPathPoint(i - 1), pathPoints.getPathPoint(i + 1));
+                middlePoint = new Vector(pathPoints.getPathPoint(i - 1)).add(diffVec.scale(0.5));
+                diffPts = new Vector(pathPoints.getPathPoint(i), middlePoint);
+                smoothedVec = new Vector(pathPoints.getPathPoint(i)).add(diffPts.scale(smoothFactor));
+                smoothedPoints.addPathPoint(new Point(smoothedVec.getX(), smoothedVec.getY()));
+            }
+            smoothedPoints.addPathPoint(pathPoints.getPathPoint(totalPoints - 1));
+            pathPoints = smoothedPoints;
+            if((k % 40)== 0 ) {
+                filled = false;
+                if(k%80 == 0){filled=true;}
+                displayPath(pathPoints);
+            }
+        }
+    }
+
     public void createPath(){
         int k;
-        int l;
-        int m;
-        int n;
 
     }
 
