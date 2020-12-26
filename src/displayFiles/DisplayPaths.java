@@ -11,6 +11,7 @@ import static displayFiles.DisplayConstants.*;
 public class DisplayPaths {
 
     private double xCoord = 20, yCoord = 50;
+    private int  polyXOffset = 600, polyYOffset = 800;
     private Path pathPoints = new Path();
     private Path userPoints = new Path();
     private Path filledPoints = new Path();
@@ -18,8 +19,17 @@ public class DisplayPaths {
     private MakePaths makePaths = new MakePaths();
     private boolean filled = false;
     private boolean erase = false;
-    private boolean pathState = true;
+    private boolean pathState = true, robotState = false;
     private int totalPoints = 0;
+    int xPoly[] = {polyXOffset,
+            polyXOffset+(int)(POLYSIZE*Math.cos(Math.toRadians(POLYROTANGLE))),
+            polyXOffset+(int)(1.414*POLYSIZE*Math.cos(Math.toRadians(POLYROTANGLE+45))),
+            polyXOffset+(int)(POLYSIZE*Math.cos(Math.toRadians(POLYROTANGLE+90)))};
+    int yPoly[] = {polyYOffset,
+            polyYOffset-(int)(POLYSIZE*Math.sin(Math.toRadians(POLYROTANGLE))),
+            polyYOffset-(int)(1.414*POLYSIZE*Math.sin(Math.toRadians(POLYROTANGLE+45))),
+            polyYOffset-(int)(POLYSIZE*Math.sin(Math.toRadians(POLYROTANGLE+90)))};
+    Polygon poly = new Polygon(xPoly, yPoly, xPoly.length);
     JFrame frame = new JFrame();
     JButton button = new JButton("Eat me");
     MyDrawPanel drawPanel = new MyDrawPanel();
@@ -56,6 +66,14 @@ public class DisplayPaths {
                 g.setColor(Color.red);
                 if (filled) g.setColor(Color.blue);
                 g.fillOval((int) (xCoord * 15) + XOFFSET, (int) (YOFFSET - yCoord * 15), 15, 15);
+            }
+            if(robotState){
+                g.setColor(Color.black);
+                g.drawPolygon(poly);
+                g.setColor(Color.red);
+                g.fillOval(polyXOffset, polyYOffset,15,15);
+                delay(100);
+                g.drawOval(polyXOffset-100, polyYOffset-100, 200,200);
             }
             }
     }
@@ -155,7 +173,19 @@ public class DisplayPaths {
     }
 
     public void addRobot(){
+        robotState = true;
+        for(int i=0; i < totalPoints; ++i) {
 
+            polyXOffset = XOFFSET + (int) (pathPoints.getPathPoint(i).getX()*15);
+            polyYOffset = YOFFSET - (int) (pathPoints.getPathPoint(i).getY()*15);
+            xPoly[0]  = polyXOffset;
+            xPoly[1] = polyXOffset+(int)(POLYSIZE*Math.cos(Math.toRadians(POLYROTANGLE)));
+            xPoly[2] = polyXOffset+(int)(1.414*POLYSIZE*Math.cos(Math.toRadians(POLYROTANGLE+45)));
+            xPoly[3] = polyXOffset+(int)(POLYSIZE*Math.cos(Math.toRadians(POLYROTANGLE+90)));
+            poly = new Polygon(xPoly, yPoly, xPoly.length);
+            drawPanel.repaint();
+            delay(500);
+        }
 
     }
 
@@ -185,4 +215,5 @@ public class DisplayPaths {
         frame.setSize(FRAMEWIDTH, FRAMEHEIGHT);
         frame.setVisible(true);
     }
+
 }
